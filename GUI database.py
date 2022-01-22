@@ -20,9 +20,12 @@ window.geometry('855x550')
 
 
 def recognize():
+    with open('data') as data_file:
+        data = json.load(data_file)
     recognizer = Recognizer()
-    for x in os.listdir('C:/Users/1/Pictures/archive/'):
-        yml_path = 'C:/Users/1/Pictures/archive/' + str(x) + '/' + 'trainner.yml'
+    print()
+    for x in os.listdir(data["dir_path"]):
+        yml_path = data["dir_path"] + str(x) + '/' + 'trainner.yml'
         recognizer.start(yml_path, str(x))
 
 
@@ -33,15 +36,16 @@ def choose_dir():
     data = {
         'dir_path': val_direct
     }
-    direct.set(f"Папка: {val_direct}")
-    with open('C:/Users/1/PycharmProjects/............./' + '/' + 'data', 'w') as file:
+    direct.set(f"{val_direct}")
+    with open('C:/Users/1/PycharmProjects/базы данных и прочий пиздец/data', 'w') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
+    btn5.config(text='Изменить папку архива')
 
 def make_image():
     global val_direct
     y = session.query(User.id)[-1]
     maker = Image_maker()
-    maker.take_image(user_id=y[0], path=val_direct)
+    maker.take_image(user_id=y[0], path=direct.get())
     user_f_o.set('Пользователь не добавлен')
     name.set('')
     surname.set('')
@@ -51,14 +55,27 @@ def make_image():
     print(f'Файлы папки юзера{os.listdir(path)}')
     trainer.getImagesAndLabels(path)
 
-def create_user():
+
+def create_user_make_im():
     user_name = name.get()
     user_surname = surname.get()
-    user = User(name=user_name, surname=user_surname, health='True', image_path='None')
+    global val_direct
+    maker = Image_maker()
+    maker.take_image(1, path=direct.get())
+    user_f_o.set('Пользователь не добавлен')
+    name.set('')
+    surname.set('')
+    trainer = Trainer()
+    print(session.query(User).all())
+    path = val_direct + '/' + str(len(session.query(User).all())+1)
+    print(f'Путь {path}')
+    print(f'Файлы папки юзера{os.listdir(path)}')
+    trainer.getImagesAndLabels(direct.get())
+    user = User(name=user_name, surname=user_surname, health='True', image_path=path)
     session.add(user)
     session.commit()
-    x = session.query(User.name, User.surname)[-1]
-    user_f_o.set(f'Сделать фото для: {x[0]} {x[1]}')
+    #x = session.query(User.name, User.surname)[-1]
+    #user_f_o.set(f'Сделать фото для: {x[0]} {x[1]}')
 
 def page3():
     global page1, page3, active_page
@@ -76,7 +93,10 @@ def page3():
     active_page = page3
 
 def page2():
+    with open('data') as data_file:
+        data = json.load(data_file)
     global page1, page2, active_page
+    direct.set(data["dir_path"])
     for el in page1:
         el.pack_forget()
     for el in page2:
@@ -139,11 +159,11 @@ entry_surname = Entry(text='фамилия', textvariable=surname, font=font)
 user_lab = Label(textvariable=user_f_o, font=font, pady=35)
 dir_lab = Label(font=font, textvariable=direct, pady=10, wraplength=False, width=100000)
 
-btn4 = Button(text='Сделать фото', fg=col1, bg=col2, font=font, command=make_image)
-btn3 = Button(text='Добавить пользователя', font=font, fg=col1, bg=col2, command=create_user)
-btn5 = Button(text='Выбрать папку', command=choose_dir, font=font, fg=col1, bg=col2)
+btn4 = Button(text='Сделать фото', fg=col1, bg=col2, font=font, command=create_user_make_im)
+#btn3 = Button(text='Добавить пользователя', font=font, fg=col1, bg=col2, command=create_user)
+btn5 = Button(text='Выбрать окончательную папку для архива', command=choose_dir, font=font, fg=col1, bg=col2)
 
-page2 = [entry_name, entry_surname, btn3, user_lab,btn5, dir_lab, btn4]
+page2 = [entry_name, entry_surname, user_lab,btn5, dir_lab, btn4]
 
 
 
