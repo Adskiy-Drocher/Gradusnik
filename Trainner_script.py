@@ -21,6 +21,7 @@ class Trainer(object):
             pilImage = Image.open(self.dir_path + '/' + el).convert('L')
             imageNp = np.array(pilImage, 'uint8')
             Id = int(os.path.split(el)[-1].split(".")[1])
+            #print(f'Ойдишнег {Id}')
             faces = self.detector.detectMultiScale(imageNp)
             for (x, y, w, h) in faces:
                 self.faceSamples.append(imageNp[y:y + h, x:x + w])

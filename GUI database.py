@@ -25,7 +25,9 @@ def recognize():
     recognizer = Recognizer()
     print()
     for x in os.listdir(data["dir_path"]):
-        yml_path = data["dir_path"] + str(x) + '/' + 'trainner.yml'
+        yml_path = data["dir_path"] + '/' + str(x) + '/' + 'trainner.yml'
+        print(data["dir_path"])
+        print(f"путь yml {yml_path}")
         recognizer.start(yml_path, str(x))
 
 
@@ -36,6 +38,7 @@ def choose_dir():
     data = {
         'dir_path': val_direct
     }
+    print(val_direct)
     direct.set(f"{val_direct}")
     with open('C:/Users/1/PycharmProjects/базы данных и прочий пиздец/data', 'w') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
@@ -61,16 +64,16 @@ def create_user_make_im():
     user_surname = surname.get()
     global val_direct
     maker = Image_maker()
-    maker.take_image(1, path=direct.get())
+    maker.take_image(len(session.query(User).all())+1, path=direct.get())
     user_f_o.set('Пользователь не добавлен')
     name.set('')
     surname.set('')
     trainer = Trainer()
     print(session.query(User).all())
-    path = val_direct + '/' + str(len(session.query(User).all())+1)
+    path = direct.get() + '/' + str(len(session.query(User).all())+1)
     print(f'Путь {path}')
-    print(f'Файлы папки юзера{os.listdir(path)}')
-    trainer.getImagesAndLabels(direct.get())
+    #print(f'Файлы папки юзера{os.listdir(path)}')
+    trainer.getImagesAndLabels(path)
     user = User(name=user_name, surname=user_surname, health='True', image_path=path)
     session.add(user)
     session.commit()

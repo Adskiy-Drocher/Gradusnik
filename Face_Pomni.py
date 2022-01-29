@@ -12,7 +12,7 @@ class Image_maker():
         self.user_id = 0
         self.count = 0
         self.direct_path = ''
-        self.img = cv2.imread('test1.jpg', cv2.IMREAD_COLOR)
+        self.img = cv2.imread('yeba.jpg', cv2.IMREAD_COLOR)
         self.path = ''
 
     def make_dir(self, user_id, path):
@@ -42,7 +42,7 @@ class Image_maker():
                 break
             elif self.count > 99:
                 break
-        print("\ n [INFO] Выход из программы и очистка")
+        #print("\ n [INFO] Выход из программы и очистка")
         # Остановить видео
         #self.vid_cam.relea8se()
         # Закройте все запущенные окна

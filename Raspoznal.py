@@ -28,7 +28,7 @@ class Recognizer(object):
         cam.set(4,480)
         minW = 0.1*cam.get(3)
         minH = 0.1*cam.get(4)
-        im = cv2.imread('test2.jpg', cv2.IMREAD_COLOR)
+        im = cv2.imread('yeba.jpg', cv2.IMREAD_COLOR)
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         faces=self.faceCascade.detectMultiScale(gray, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)))
         for(x,y,w,h) in faces:
