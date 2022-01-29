@@ -40,7 +40,7 @@ def choose_dir():
     }
     print(val_direct)
     direct.set(f"{val_direct}")
-    with open('C:/Users/1/PycharmProjects/базы данных и прочий пиздец/data', 'w') as file:
+    with open(f'{os.getcwd()}/data', 'w') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
     btn5.config(text='Изменить папку архива')
 
@@ -96,8 +96,13 @@ def page3():
     active_page = page3
 
 def page2():
-    with open('data') as data_file:
-        data = json.load(data_file)
+    try:
+        with open('data') as data_file:
+            data = json.load(data_file)
+    except:
+        data = {
+            'dir_path': 'папка не выбранна'
+        }
     global page1, page2, active_page
     direct.set(data["dir_path"])
     for el in page1:
