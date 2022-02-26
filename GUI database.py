@@ -60,17 +60,11 @@ def create_user_make_im():
         print(len(surname.get()))
         user_f_o.set('Одно из полей/оба пусты!')
         print("""
-        ПИЗДЕЦ
-        ПИЗДЕЦ
-        ПИЗДЕЦ
-        ПИЗДЕЦ
-        ПИЗДЕЦ
+        H
         """)
         return
     user_name = name.get()
-    print('Хуйняяя' ,user_name)
     user_surname = surname.get()
-    print('Хуйняяя 2', user_surname)
     global val_direct
     maker = Image_maker()
     maker.take_image(len(session.query(User).all())+1, path=direct.get())
@@ -78,9 +72,9 @@ def create_user_make_im():
     name.set('')
     surname.set('')
     trainer = Trainer()
-    print(session.query(User).all())
+    #print(session.query(User).all())
     path = direct.get() + '/' + str(len(session.query(User).all())+1)
-    print(f'Путь {path}')
+    #print(f'Путь {path}')
     #print(f'Файлы папки юзера{os.listdir(path)}')
     trainer.getImagesAndLabels(path)
     user = User(name=user_name, surname=user_surname, health='True', image_path=path)
@@ -91,13 +85,16 @@ def create_user_make_im():
 
 def page3():
     global page1, page3, active_page
+    base_lis = []
     font = ('Arial', 12, 'bold')
     base.config(font=font)
     for el in page1:
         el.pack_forget()
     btn_back.pack()
     for instance in session.query(User).all():
-        base.insert(END, f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
+        base_lis.append(f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
+    for el in base_lis:
+        base.insert(END, el)
     for el in page3:
         if str(el) == '.!listbox':
             el.pack(side=LEFT, fill=Y)
@@ -207,6 +204,7 @@ sb = Scrollbar(orient=VERTICAL)
 base = Listbox(width=93)
 del_lab = Label(text='Потом доделаю', font=font)
 page3 = [del_lab, del_btn, base, sb]
+
 
 #Отрисовка
 window.mainloop()
