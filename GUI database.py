@@ -79,21 +79,21 @@ def create_user_make_im():
     trainer.getImagesAndLabels(path)
     user = User(name=user_name, surname=user_surname, health='True', image_path=path)
     session.add(user)
+    base_lis.append(f'{user.id}  Ф.И: {user.surname} {instance.name}; сост. здоровья: {user.health}; Фото: {user.image_path}')
     session.commit()
     #x = session.query(User.name, User.surname)[-1]
     #user_f_o.set(f'Сделать фото для: {x[0]} {x[1]}')
 
 def page3():
-    global page1, page3, active_page
-    base_lis = []
+    global page1, page3, active_page, base_lis
+    base.delete(1, 999)
     font = ('Arial', 12, 'bold')
     base.config(font=font)
     for el in page1:
         el.pack_forget()
     btn_back.pack()
-    for instance in session.query(User).all():
-        base_lis.append(f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
     for el in base_lis:
+        print(el)
         base.insert(END, el)
     for el in page3:
         if str(el) == '.!listbox':
@@ -157,6 +157,7 @@ user_name = ''
 user_surname = ''
 active_user_data = [filename, user_name, user_surname]
 active_page = []
+base_lis = []
 
 #Переменные, отвечающие за внешность интерфейса
 font = ('Arial', 20, 'bold')
@@ -173,7 +174,6 @@ btn2 = Button(text='Добавить нового пользователя', com
 btn_test = Button(text='Сделать фото с вебки', font=font, fg=col1, bg=col2, command=recognize)
 page1 = [btn1, btn2, ras_lab, btn_test]
 
-pack_page1()
 
 #Страница №2
 user_f_o = StringVar()
@@ -205,8 +205,12 @@ base = Listbox(width=93)
 del_lab = Label(text='Потом доделаю', font=font)
 page3 = [del_lab, del_btn, base, sb]
 
-
 #Отрисовка
+for instance in session.query(User).all():
+    base_lis.append(
+        f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
+#print(base_lis)
+pack_page1()
 window.mainloop()
 
 
