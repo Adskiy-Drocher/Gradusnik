@@ -22,7 +22,7 @@ def delete():
     select = base.curselection()
     select_text = base.get(first=select)
     pupil = session.query(User, User.image_path).filter_by(id=select_text[0:3]).first()
-    print(f'Ученик ------{pupil} {pupil[0]}')
+    #print(f'Ученик ------{pupil} {pupil[0]}')
     shutil.rmtree(pupil[1])
     session.delete(pupil[0])
     session.commit()
@@ -32,11 +32,10 @@ def recognize():
     with open('data') as data_file:
         data = json.load(data_file)
     recognizer = Recognizer()
-    print()
     for x in os.listdir(data["dir_path"]):
         yml_path = data["dir_path"] + '/' + str(x) + '/' + 'trainner.yml'
-        print(data["dir_path"])
-        print(f"путь yml {yml_path}")
+        #print(data["dir_path"])
+        #print(f"путь yml {yml_path}")
         recognizer.start(yml_path, str(x))
 
 
@@ -47,7 +46,7 @@ def choose_dir():
     data = {
         'dir_path': val_direct
     }
-    print(val_direct)
+    #print(val_direct)
     direct.set(f"{val_direct}")
     with open(f'{os.getcwd()}/data', 'w') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
@@ -56,12 +55,12 @@ def choose_dir():
 
 def create_user_make_im():
     if len(name.get()) == 0 or len(surname.get()) == 0:
-        print(len(name.get()))
-        print(len(surname.get()))
+        #print(len(name.get()))
+        #print(len(surname.get()))
         user_f_o.set('Одно из полей/оба пусты!')
-        print("""
-        H
-        """)
+        #print("""
+        #H
+        #""")
         return
     user_name = name.get()
     user_surname = surname.get()
@@ -79,21 +78,27 @@ def create_user_make_im():
     trainer.getImagesAndLabels(path)
     user = User(name=user_name, surname=user_surname, health='True', image_path=path)
     session.add(user)
-    base_lis.append(f'{user.id}  Ф.И: {user.surname} {instance.name}; сост. здоровья: {user.health}; Фото: {user.image_path}')
+    #base_lis.append(f'{user.id}  Ф.И: {user.surname} {user.name}; сост. здоровья: {user.health}; Фото: {user.image_path}')
     session.commit()
     #x = session.query(User.name, User.surname)[-1]
     #user_f_o.set(f'Сделать фото для: {x[0]} {x[1]}')
 
 def page3():
-    global page1, page3, active_page, base_lis
-    base.delete(1, 999)
+    global page1, page3, active_page
+    base_lis = list()
+    print(len(base_lis))
+    for instance in session.query(User).all():
+        base_lis.append(
+            f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
+    print(len(base_lis))
+    base.delete(0, 999)
     font = ('Arial', 12, 'bold')
     base.config(font=font)
     for el in page1:
         el.pack_forget()
     btn_back.pack()
     for el in base_lis:
-        print(el)
+        #print(el)
         base.insert(END, el)
     for el in page3:
         if str(el) == '.!listbox':
@@ -131,7 +136,7 @@ def pack_page1():
     with open('data') as data_file:
         data = json.load(data_file)
     for el in page1:
-        print(el)
+        #print(el)
         el.pack()
     if len(data["dir_path"]) > 0:
         ras_str.set(f'Папка распознования {data["dir_path"]}')
@@ -157,7 +162,6 @@ user_name = ''
 user_surname = ''
 active_user_data = [filename, user_name, user_surname]
 active_page = []
-base_lis = []
 
 #Переменные, отвечающие за внешность интерфейса
 font = ('Arial', 20, 'bold')
@@ -171,7 +175,7 @@ ras_str = StringVar()
 ras_lab = Label(textvariable=ras_str, font=font)
 btn1 = Button(text='Открыть базу данных', command=page3, font=font, fg=col1, bg=col2)
 btn2 = Button(text='Добавить нового пользователя', command=page2, font=font, fg=col1, bg=col2)
-btn_test = Button(text='Сделать фото с вебки', font=font, fg=col1, bg=col2, command=recognize)
+btn_test = Button(text='Начать съемку с вебкамеры', font=font, fg=col1, bg=col2, command=recognize)
 page1 = [btn1, btn2, ras_lab, btn_test]
 
 
@@ -206,9 +210,9 @@ del_lab = Label(text='Потом доделаю', font=font)
 page3 = [del_lab, del_btn, base, sb]
 
 #Отрисовка
-for instance in session.query(User).all():
-    base_lis.append(
-        f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
+#for instance in session.query(User).all():
+    #base_lis.append(
+        #f'{instance.id}  Ф.И: {instance.surname} {instance.name}; сост. здоровья: {instance.health}; Фото: {instance.image_path}')
 #print(base_lis)
 pack_page1()
 window.mainloop()

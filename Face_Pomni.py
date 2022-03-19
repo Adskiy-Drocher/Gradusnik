@@ -12,12 +12,13 @@ class Image_maker():
         self.user_id = 0
         self.count = 0
         self.direct_path = ''
-        self.img = cv2.imread('yeba.jpg', cv2.IMREAD_COLOR)
+        #self.img = cv2.imread('chelik1.jpg', cv2.IMREAD_COLOR)
+        self.img = self.vid_cam.read()
         self.path = ''
 
     def make_dir(self, user_id, path):
         user_id = str(user_id)
-        print('Путь к чему-то', path)
+        #print('Путь к чему-то', path)
         os.mkdir(rf'{path}/{user_id}')
         return f'{path}/{user_id}'
 
@@ -28,14 +29,15 @@ class Image_maker():
         self.user_id = user_id
         self.path = path
         path_dir = self.make_dir(user_id=self.user_id, path=self.path)
-        print(path_dir)
+        #print(path_dir)
         while True:
-            grey = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            ret, image_frame = self.vid_cam.read()
+            grey = cv2.cvtColor(image_frame, cv2.COLOR_BGR2GRAY)
             faces = self.face_detector.detectMultiScale(grey, scaleFactor=1.2, minNeighbors=5, minSize=(20, 20))
             for (x, y, w, h) in faces:
-                cv2.rectangle(self.img, (x, y), (x + w, y + h), 255, 0, 0, 2)
+                cv2.rectangle(image_frame, (x, y), (x + w, y + h), 255, 0, 0, 2)
                 roi_gray = grey[y:y + h, x:x + w]
-                roi_color = self.img[y:y + h, x:x + w]
+                roi_color = image_frame[y:y + h, x:x + w]
                 self.count += 1
                 cv2.imwrite(path_dir + '/' + str(self.user_id) + "." + str(self.count) + ".jpg", grey[y:y + h, x:x + w])
             if cv2.waitKey(100) & 0xFF == ord('q'):

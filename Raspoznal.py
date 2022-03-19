@@ -16,7 +16,7 @@ class Recognizer(object):
             list = session.query(User.name, User.id).all()[x]
             self.names[str(list[1])] = list[0]
             y = session.query(User.id)[x]
-            print('Имена' ,self.names)
+            #print('Имена' ,self.names)
 
 
     def start(self, yml_path, ID):
@@ -28,7 +28,7 @@ class Recognizer(object):
         cam.set(4,480)
         minW = 0.1*cam.get(3)
         minH = 0.1*cam.get(4)
-        im = cv2.imread('yeba.jpg', cv2.IMREAD_COLOR)
+        ret, im = cam.read()
         gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         faces=self.faceCascade.detectMultiScale(gray, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)))
         for(x,y,w,h) in faces:
@@ -36,9 +36,13 @@ class Recognizer(object):
             Id, confidence = self.recognizer.predict(gray[y:y+h,x:x+w])
             if (confidence) < 100:
                 confidence = "  {0}%".format(round(100 - confidence))
+                #print(f'{confidence}%')
             else:
                 confidence = "  {0}%".format(round(100 - confidence))
+
+                #print(f'{confidence}%')
         print(f'Путь: {yml_path}, Имя: {name}, Вероятность: {confidence}')
+
 
 
 
