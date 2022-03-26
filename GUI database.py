@@ -29,6 +29,7 @@ def delete():
     base.delete(select)
 
 def recognize():
+    pupil_data = list()
     with open('data') as data_file:
         data = json.load(data_file)
     recognizer = Recognizer()
@@ -36,7 +37,10 @@ def recognize():
         yml_path = data["dir_path"] + '/' + str(x) + '/' + 'trainner.yml'
         #print(data["dir_path"])
         #print(f"путь yml {yml_path}")
-        recognizer.start(yml_path, str(x))
+        pupil_data.append(recognizer.start(yml_path, str(x)))
+    print(max(pupil_data))
+    print(pupil_data)
+
 
 
 
@@ -132,6 +136,14 @@ def page2():
     btn_back.pack()
     active_page = page2
 
+def page4():
+    global page4, active_page
+    active_page = page4
+    for el in page1:
+        el.pack_forget()
+    for el in page4:
+        el.pack()
+
 def pack_page1():
     with open('data') as data_file:
         data = json.load(data_file)
@@ -175,7 +187,7 @@ ras_str = StringVar()
 ras_lab = Label(textvariable=ras_str, font=font)
 btn1 = Button(text='Открыть базу данных', command=page3, font=font, fg=col1, bg=col2)
 btn2 = Button(text='Добавить нового пользователя', command=page2, font=font, fg=col1, bg=col2)
-btn_test = Button(text='Начать съемку с вебкамеры', font=font, fg=col1, bg=col2, command=recognize)
+btn_test = Button(text='Начать съемку с вебкамеры', font=font, fg=col1, bg=col2, command=page4)
 page1 = [btn1, btn2, ras_lab, btn_test]
 
 
@@ -209,6 +221,14 @@ base = Listbox(width=93)
 del_lab = Label(text='Потом доделаю', font=font)
 page3 = [del_lab, del_btn, base, sb]
 
+#Страница №4
+pupil_str = StringVar()
+pupil_str.set("Съемка не снималась")
+
+cam_btn = Button(text="начать съёмку", font=font, fg=col1, bg=col2, command=recognize)
+pupil_lab = Label(textvariable=pupil_str, font=font)
+page4 = [btn_back, cam_btn, pupil_lab]
+
 #Отрисовка
 #for instance in session.query(User).all():
     #base_lis.append(
@@ -216,7 +236,3 @@ page3 = [del_lab, del_btn, base, sb]
 #print(base_lis)
 pack_page1()
 window.mainloop()
-
-
-
-#biba  200 strok
