@@ -29,7 +29,7 @@ def delete():
     base.delete(select)
 
 def recognize():
-    pupil_data = list()
+    pupil_data = dict()
     with open('data') as data_file:
         data = json.load(data_file)
     recognizer = Recognizer()
@@ -37,9 +37,14 @@ def recognize():
         yml_path = data["dir_path"] + '/' + str(x) + '/' + 'trainner.yml'
         #print(data["dir_path"])
         #print(f"путь yml {yml_path}")
-        pupil_data.append(recognizer.start(yml_path, str(x)))
-    print(max(pupil_data))
-    print(pupil_data)
+        #pupil_data.append(recognizer.start(yml_path, str(x)))
+        #print(recognizer.start(yml_path, str(x)))
+        #pupil_data[recognizer.start(yml_path, str(x))[2]] = recognizer.start(yml_path, str(x))[1]
+        res = recognizer.start(yml_path, str(x))
+        pupil_data[res[0]] = res[1]
+    #print(max(pupil_data))
+    print(f"данные учеников {pupil_data}")
+    print(f"макссимальноее {max(pupil_data.values())}")
 
 
 
