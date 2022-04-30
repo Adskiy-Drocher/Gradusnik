@@ -41,10 +41,14 @@ def recognize():
         #print(recognizer.start(yml_path, str(x)))
         #pupil_data[recognizer.start(yml_path, str(x))[2]] = recognizer.start(yml_path, str(x))[1]
         res = recognizer.start(yml_path, str(x))
+        print(res)
         pupil_data[res[0]] = res[1]
     #print(max(pupil_data))
     print(f"данные учеников {pupil_data}")
-    print(f"макссимальноее {max(pupil_data.values())}")
+    print(f"макссимальное {max(pupil_data.keys())}")
+    max_key = max(pupil_data.keys())
+    pupil_str.set(f"Ученик {pupil_data[max_key]}, вероятность {max_key}")
+
 
 
 

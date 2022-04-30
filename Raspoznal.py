@@ -36,12 +36,14 @@ class Recognizer(object):
             Id, confidence = self.recognizer.predict(gray[y:y+h,x:x+w])
             if (confidence) < 100:
                 confidence = "  {0}%".format(round(100 - confidence))
-                #print(f'{confidence}%')
+                print(f'{confidence}%')
+                return confidence, name
             else:
                 confidence = "  {0}%".format(round(100 - confidence))
+                print(f'вероятность {confidence}')
+                return confidence, name
+            #print(f'аываывы{yml_path, name, confidence}')
 
-                #print(f'{confidence}%')
-        print(f'Путь: {yml_path}, Имя: {name}, Вероятность: {confidence}')
 
 
 
